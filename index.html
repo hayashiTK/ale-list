@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <title>アレルギー表示画像メーカー</title>
+
+    <script>
+        function createImage() {
+
+            selectArray = [];
+            document.allergen.allergen.forEach(n => { if (n.checked) { selectArray.push(n.value) } });
+
+            //console.log(selectArray.map(v => "./"+ v + ".png"));
+
+            //一旦、どちらかの画像を表示するようにしてある
+            //if (selectArray.find(n => n == "pig")) {
+            //    document.getElementById("previewImage").src = "./pig.png"
+            //} else {
+            //    document.getElementById("previewImage").src = "./beef.png"
+            //}
+
+            //画像を結合して表示する
+            const canvas = document.querySelector("#concat");
+            const ctx = canvas.getContext("2d");
+            ctx.clearRect(0,0,ctx.canvas.clientWidth, ctx.canvas.clientHeight);
+            
+            for (let i = 0; i < selectArray.length; i++) {
+
+                //varにすると最後の画像が2枚表示される。仕組みが分からん…
+                const img = new Image();
+                img.src = "./" + selectArray[i] + ".png";
+                
+                console.log(img.src);
+
+                img.onload = function () {
+                    //ctx.drawImage(img, 0, 0);
+                    ctx.drawImage(img, i*255, 0, 255, 255);
+                    //ctx.drawImage(img, i*255, 0, i*255, 255);
+                }                    
+
+            }
+
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <div name="selectArea">
+        アレルギー要素一覧
+
+        <form name="allergen">
+            <input type="checkbox" name="allergen" value="beef">牛<br>
+            <input type="checkbox" name="allergen" value="pig">豚<br>
+            <input type="button" value="画像生成" onclick="createImage();">
+        </form>
+
+        <!--
+        <div name="previewArea">
+            <img id="previewImage" src="./beef.png" alt="プレビュー">
+        </div>
+        -->
+
+        <canvas id="concat" width="1024" height="1024"></canvas>
+
+</body>
+
+</html>
+
+<!--
+    参考サイト：これから
+        https://blog.katsubemakito.net/html5/canvas-concat
+
+    参考サイト：現時点まで
+        https://uxmilk.jp/38891
+        https://keymaso.com/programemory/javascript/html-to-image/
+        https://hi0a.com/demo/-js/js-canvas-text/
+-->
